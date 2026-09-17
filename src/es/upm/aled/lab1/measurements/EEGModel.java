@@ -56,8 +56,10 @@ public class EEGModel {
 	 * @param measurements The Measurements that make up the EEGModel.
 	 */
 	public EEGModel(Measurement[] measurements) {
-		// TODO
-		
+		for (Measurement m : measurements) {
+			this.measurements.add(m); // No se debe poner this.measurements = this.measurements.add(m) porque cuando
+										// se hace add el método devuelve un boolean y da error.
+		}
 	}
 
 	/**
@@ -90,16 +92,16 @@ public class EEGModel {
 	 */
 	public EEGModel filter(Filter filter) {
 		// TODO
-		
+
 		return null;
 	}
 
 	/**
 	 * Fills the measurements from the contents of an OpenBCI file, a CSV file in
 	 * which each line represents a measurement. The first column is an index modulo
-	 * 256, and the remaining columns are the values of the samples obtained by
-	 * each of the channels. All lines must have the same number of columns. "%" at
-	 * the beginning of a line indicates a comment.
+	 * 256, and the remaining columns are the values of the samples obtained by each
+	 * of the channels. All lines must have the same number of columns. "%" at the
+	 * beginning of a line indicates a comment.
 	 * 
 	 * @param fileName Path to the OpenBCI file.
 	 * @throws IOException Thrown if the file can't be read.
@@ -130,8 +132,37 @@ public class EEGModel {
 	 * @throws IOException Thrown if the file can't be written.
 	 */
 	public void saveFile(String fileName) throws IOException {
-		// TODO
-		
+
+		// Creo el archivo
+		File file = new File(fileName);
+
+		// Creo el stream de salida
+		FileOutputStream f = new FileOutputStream(file);
+
+		// Para poder escribir las cadenas
+		PrintStream ps = new PrintStream(f);
+
+		int contador = 0;
+
+		for (Measurement m : measurements) {
+
+			ps.print(contador % 256);
+
+			for (int i = 0; i < m.numChannels(); i++) {
+
+				ps.append(", ");
+				ps.print(m.getChannel(i));
+			}
+
+			ps.println();
+			contador++;
+
+		}
+
+		// Para cerrar el stream
+		ps.close();
+		f.close();
+
 	}
 
 	/**
@@ -250,12 +281,12 @@ public class EEGModel {
 			EEGModel eeg = new EEGModel(args[0]);
 			eeg.plotData();
 			// TODO
-			
+
 		} else {
 			EEGModel eeg = new EEGModel();
 			eeg.createSyntheticData(1000);
 			// TODO
-			
+
 		}
 	}
 }
