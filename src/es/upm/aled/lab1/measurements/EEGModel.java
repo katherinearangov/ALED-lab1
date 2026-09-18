@@ -290,11 +290,23 @@ public class EEGModel {
 				position++;
 			}
 
-			FilterExtractChannels filter = new FilterExtractChannels(validChannels);
+			FilterExtractChannels filterChannels = new FilterExtractChannels(validChannels);
 
-			EEGModel filterEEG = eeg.filter(filter);
+			EEGModel filterEEGChannels = eeg.filter(filterChannels);
 
-			filterEEG.plotData();
+			FilterExtractPeriod filterPeriod = new FilterExtractPeriod(250, 550);
+
+			EEGModel filterEEGChannelsPeriod = filterEEGChannels.filter(filterPeriod);
+
+			filterEEGChannelsPeriod.plotData();
+
+			System.out.println(filterEEGChannelsPeriod.getMeasurements().length);
+
+			System.out.println(filterEEGChannels.getMeasurements()[250].getChannel(0));
+			System.out.println(filterEEGChannelsPeriod.getMeasurements()[0].getChannel(0));
+
+			System.out.println(filterEEGChannels.getMeasurements()[550].getChannel(0));
+			System.out.println(filterEEGChannelsPeriod.getMeasurements()[300].getChannel(0));
 
 		} else {
 			EEGModel eeg = new EEGModel();
@@ -302,7 +314,6 @@ public class EEGModel {
 			try {
 				eeg.saveFile("Synthetic.txt");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
