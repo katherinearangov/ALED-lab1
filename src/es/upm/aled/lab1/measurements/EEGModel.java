@@ -91,9 +91,8 @@ public class EEGModel {
 	 * @return The new EEGModel.
 	 */
 	public EEGModel filter(Filter filter) {
-		// TODO
 
-		return null;
+		return filter.applyFilter(this);
 	}
 
 	/**
@@ -279,13 +278,33 @@ public class EEGModel {
 	public static void main(String[] args) {
 		if (args.length > 0) {
 			EEGModel eeg = new EEGModel(args[0]);
-			eeg.plotData();
-			// TODO
+
+			int[] validChannels = new int[3];
+
+			int numChannels = eeg.getMeasurements()[0].numChannels();
+
+			int position = 0;
+
+			for (int i = numChannels - 3; i < numChannels; i++) {
+				validChannels[position] = i;
+				position++;
+			}
+
+			FilterExtractChannels filter = new FilterExtractChannels(validChannels);
+
+			EEGModel filterEEG = eeg.filter(filter);
+
+			filterEEG.plotData();
 
 		} else {
 			EEGModel eeg = new EEGModel();
 			eeg.createSyntheticData(1000);
-			// TODO
+			try {
+				eeg.saveFile("Synthetic.txt");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		}
 	}
