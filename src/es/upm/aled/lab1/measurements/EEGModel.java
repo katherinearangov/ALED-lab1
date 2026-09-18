@@ -57,8 +57,7 @@ public class EEGModel {
 	 */
 	public EEGModel(Measurement[] measurements) {
 		for (Measurement m : measurements) {
-			this.measurements.add(m); // No se debe poner this.measurements = this.measurements.add(m) porque cuando
-										// se hace add el método devuelve un boolean y da error.
+			this.measurements.add(m);
 		}
 	}
 
@@ -294,19 +293,11 @@ public class EEGModel {
 
 			EEGModel filterEEGChannels = eeg.filter(filterChannels);
 
-			FilterExtractPeriod filterPeriod = new FilterExtractPeriod(250, 550);
+			FilterExtractPeriod filterPeriod = new FilterExtractPeriod(2750, 5750);
 
 			EEGModel filterEEGChannelsPeriod = filterEEGChannels.filter(filterPeriod);
 
 			filterEEGChannelsPeriod.plotData();
-
-			System.out.println(filterEEGChannelsPeriod.getMeasurements().length);
-
-			System.out.println(filterEEGChannels.getMeasurements()[250].getChannel(0));
-			System.out.println(filterEEGChannelsPeriod.getMeasurements()[0].getChannel(0));
-
-			System.out.println(filterEEGChannels.getMeasurements()[550].getChannel(0));
-			System.out.println(filterEEGChannelsPeriod.getMeasurements()[300].getChannel(0));
 
 		} else {
 			EEGModel eeg = new EEGModel();
